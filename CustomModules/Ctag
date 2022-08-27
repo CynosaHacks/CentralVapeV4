@@ -1,0 +1,20 @@
+local plrs = game.Players
+local sss = game.ServerScriptService
+local chatService = require(sss:WaitForChild('ChatServiceRunner'):WaitForChild('ChatService'))
+
+chatService.SpeakerAdded:Connect(function(plr)
+	
+	local speaker = chatService:GetSpeaker(plr)	
+	
+-- COPY FROM THIS
+	if plrs[plr].UserId == 3532116704 then  -- CHANGE THE 9 NUMBER TO YOUR PROFILE NUMBER
+		speaker:SetExtraData('NameColor', Color3.fromRGB(0, 179, 255))
+		speaker:SetExtraData('ChatColor', Color3.fromRGB(0, 208, 227))
+		speaker:SetExtraData('Tags', {{TagText = 'Developer', TagColor = Color3.fromRGB(0, 179, 255)}})	
+		print("Gave a developer a special chat tag and chat color!")		
+	end
+-- TO THIS
+	-- IF YOU WANT MORE PLAYERS AND OPTIONS JUST COPY WHAT I SAID
+	-- THIS PASTE BELOW THIS TEXT AND REPEAT!
+
+end)
