@@ -9,8 +9,6 @@ game.StarterGui:SetCore("SendNotification", {
     Text = "Owner Edition"; 
     Duration = 20;
 })
-shared.VapePrivate = true
-shared.VapeDeveloper = true
 loadstring(game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/NewMainScript.lua", true))()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/CynosaHacks/CentralVapeV4/main/MainScript.lua", true))()
 
