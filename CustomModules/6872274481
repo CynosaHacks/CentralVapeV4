@@ -34,6 +34,7 @@ GuiLibrary["MainGui"].ScaledGui.ClickGui.Version.Text = "Central Online | Versio
 GuiLibrary["MainGui"].ScaledGui.ClickGui.MainWindow.TextLabel.Text = "Central Online VERSION: 2.3"
 GuiLibrary["MainGui"].ScaledGui.ClickGui.Version.Version.Text = "Central Online V2"
 GuiLibrary["MainGui"].ScaledGui.ClickGui.Version.Position = UDim2.new(1, -175 - 20, 1, -25)
+createwarning("Central Public", "Successfully Loaded ", 10)
 
 local AnticheatDisabler = COB("Utility", {
     Name = "Infinite Yield",
@@ -198,5 +199,5 @@ local OldNoFallFunction
 		["Function"] = function() end, 
 		["Default"] = true
 	})
-createwarning("Central Public", "Successfully Loaded ", 10)
+
 
