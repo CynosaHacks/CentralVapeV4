@@ -1,5 +1,202 @@
-game.StarterGui:SetCore("SendNotification", {
-    Title = "INFO";
-    Text = "Lobby Modules soon."; 
-    Duration = 15;
+repeat task.wait() until shared.GuiLibrary
+local uis = game:GetService("UserInputService")
+local GuiLibrary = shared.GuiLibrary
+local ScriptSettings = {}
+local UIS = game:GetService("UserInputService")
+local COB = function(tab, argstable) 
+	return GuiLibrary["ObjectsThatCanBeSaved"][tab.."Window"]["Api"].CreateOptionsButton(argstable)
+end
+function securefunc(func)
+	task.spawn(function()
+		spawn(function()
+			pcall(function()
+				loadstring(
+					func()
+				)()
+			end)
+		end)
+	end)
+end
+function getstate()
+	local ClientStoreHandler = require(game.Players.LocalPlayer.PlayerScripts.TS.ui.store).ClientStore
+	return ClientStoreHandler:getState().Game.matchState
+end
+function iscustommatch()
+	local ClientStoreHandler = require(game.Players.LocalPlayer.PlayerScripts.TS.ui.store).ClientStore
+	return ClientStoreHandler:getState().Game.customMatch
+end
+function checklagback()
+	local hrp = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart
+	return isnetworkowner(hrp)
+end
+
+GuiLibrary["MainGui"].ScaledGui.ClickGui.Version.Text = "Central Online | Version: 2.4"
+GuiLibrary["MainGui"].ScaledGui.ClickGui.MainWindow.TextLabel.Text = "Central Online VERSION: 2.4"
+GuiLibrary["MainGui"].ScaledGui.ClickGui.Version.Version.Text = "Central Online V2"
+GuiLibrary["MainGui"].ScaledGui.ClickGui.Version.Position = UDim2.new(1, -175 - 20, 1, -25)
+createwarning("Central Public", "Successfully Loaded ", 10)
+
+local AnticheatDisabler = COB("Utility", {
+    Name = "Infinite Yield",
+    Function = function(callback) 
+        if callback then
+        loadstring(game:HttpGet(('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'),true))()
+        end
+    end,
+    Default = false,
+    HoverText = "Executes Infinite Yield"
 })
+local AnticheatDisabler = COB("Render", {
+    Name = "Night",
+    Function = function(callback) 
+        if callback then
+         game.Lighting.TimeOfDay = "00:00:00"
+        else
+            game.Lighting.TimeOfDay = "14:00:00"
+        end
+    end,
+    Default = false,
+    HoverText = "Changes the sky to night"
+})
+local AntiAFK = COB("Utility", {
+	["Name"] = "AntiAFK",
+	["Function"] = function(callback)
+		if callback then
+			pcall(function()
+				ScriptSettings.AntiAFK = true
+				local cons = getconnections or get_signal_cons
+				if cons then
+					for i,v in pairs(cons(game:GetService("Players").LocalPlayer.Idled)) do
+						if ScriptSettings.AntiAFK == true then
+							v:Disable()
+							v:Disconnect()
+						end
+					end
+				end
+				assert(firesignal, "Asserted FireSignal")
+				local uis = game:GetService("UserInputService")
+				local runs = game:GetService("RUnService")
+				uis.WindowFocusReleased:Connect(function()
+					if ScriptSettings.AntiAFK == true then
+						runs.Stepped:Wait()
+						pcall(firesignal, uis.WindowFocused)
+					end
+				end)
+			end)
+		else
+			pcall(function()
+				ScriptSettings.AntiAFK = false
+			end)
+		end
+	end,
+	["Default"] = false,
+	["HoverText"] = "Prevents you from being kicked when afk"
+})
+local AnticheatDisabler = COB("Blatant", {
+    Name = "Infinite Jump",
+    Function = function(callback) 
+        if callback then
+            toggled = true
+				game:GetService("UserInputService").jumpRequest:Connect(function()
+					if toggled == true then
+						wait(jumpdelay)
+						game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass"Humanoid":ChangeState("Jumping")
+						wait(0.0000003)
+						game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass"Humanoid":ChangeState("freefall")						
+					end
+				end)
+			else
+				toggled = false
+        end
+    end,
+    Default = false,
+    HoverText = false
+})
+local OldNoFallFunction
+	local flyspeed = {["Value"] = 40}
+	local flyverticalspeed = {["Value"] = 40}
+	local flyupanddown = {["Enabled"] = true}
+	local flypop = {["Enabled"] = true}
+	local flyautodamage = {["Enabled"] = true}
+	local olddeflate
+	local flyrequests = 0
+	local flytime = 60
+	local flylimit = false
+	local flyup = false
+	local flydown = false
+	local tnttimer = 0
+	local flypress
+	local flyendpress
+	local flycorountine
+
+	local flytog = false
+	local flytogtick = tick()
+	fly = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "InfFly",
+		["Function"] = function(callback)
+			if callback then
+				--buyballoons()
+				flypress = uis.InputBegan:Connect(function(input1)
+					if flyupanddown["Enabled"] and bettergetfocus() == nil then
+						if input1.KeyCode == Enum.KeyCode.Space then
+							flyup = true
+						end
+						if input1.KeyCode == Enum.KeyCode.LeftShift then
+							flydown = true
+						end
+					end
+				end)
+				flyendpress = uis.InputEnded:Connect(function(input1)
+					if input1.KeyCode == Enum.KeyCode.Space then
+						flyup = false
+					end
+					if input1.KeyCode == Enum.KeyCode.LeftShift then
+						flydown = false
+					end
+				end)
+				RunLoops:BindToHeartbeat("Fly", 1, function(delta) 
+					if isAlive() then
+						local mass = (lplr.Character.HumanoidRootPart:GetMass() - 1.4) * (delta * 100)
+						mass = mass + (flytog and -10 or 10)
+						if flytogtick <= tick() then
+							flytog = not flytog
+							flytogtick = tick() + 0.2
+						end
+						local flypos = lplr.Character.Humanoid.MoveDirection * math.clamp(flyspeed["Value"], 1, 20)
+						local flypos2 = (lplr.Character.Humanoid.MoveDirection * math.clamp(flyspeed["Value"] - 20, 0, 1000)) * delta
+						lplr.Character.HumanoidRootPart.Transparency = 1
+						lplr.Character.HumanoidRootPart.Velocity = flypos + (Vector3.new(0, mass + (flyup and flyverticalspeed["Value"] or 0) + (flydown and -flyverticalspeed["Value"] or 0), 0))
+						lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + flypos2
+						flyvelo = flypos + Vector3.new(0, mass + (flyup and flyverticalspeed["Value"] or 0) + (flydown and -flyverticalspeed["Value"] or 0), 0)
+					end
+				end)
+			else
+				flyup = false
+				flydown = false
+				flypress:Disconnect()
+				flyendpress:Disconnect()
+				RunLoops:UnbindFromHeartbeat("Fly")
+			end
+		end,
+		["HoverText"] = "Makes you go zoom (Balloons or TNT Required)"
+	})
+	flyspeed = fly.CreateSlider({
+		["Name"] = "Speed",
+		["Min"] = 1,
+		["Max"] = 170,
+		["Function"] = function(val) end, 
+		["Default"] = 74
+	})
+	flyverticalspeed = fly.CreateSlider({
+		["Name"] = "Vertical Speed",
+		["Min"] = 1,
+		["Max"] = 100,
+		["Function"] = function(val) end, 
+		["Default"] = 44
+	})
+	flyupanddown = fly.CreateToggle({
+		["Name"] = "Y Level",
+		["Function"] = function() end, 
+		["Default"] = true
+	})
+
