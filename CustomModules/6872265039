@@ -135,3 +135,17 @@ local AnimDisabler = COB("Utility", {
 	["Default"] = false,
 	["HoverText"] = "Disables your animation"
 })
+local EmeraldArmour = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+    ["Name"] = "Get Emerald Pack",
+    ["Function"] = function(callback) 
+        if callback then
+        local lplr = game.Players.LocalPlayer
+
+game.ReplicatedStorage.Items.emerald_sword:Clone().Parent = game.ReplicatedStorage.Inventories[lplr.Name]
+game.ReplicatedStorage.Items.emerald_helmet:Clone().Parent = game.ReplicatedStorage.Inventories[lplr.Name]
+game.ReplicatedStorage.Items.emerald_boots:Clone().Parent = game.ReplicatedStorage.Inventories[lplr.Name]
+game.ReplicatedStorage.Items.emerald_chestplate:Clone().Parent = game.ReplicatedStorage.Inventories[lplr.Name]
+        end
+    end,
+
+})
